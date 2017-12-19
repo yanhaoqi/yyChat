@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>yyChat</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body{
+        font: 16px Helvetica, Arial;
+    }
+    .wrapper{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: 600px;
+        height: 800px;
+        border: 3px solid #202d4a;
+        background-color: #f3f3f3;
+    }
+    .message{
+        height: 650px;
+        overflow: auto;
+    }
+    .send{
+        height: 144px;
+        width: 100%;
+        border: 0;
+        border-top: 3px solid #202d4a;
+        padding: 12px;
+        outline: none;
+        resize: none;
+        background-color: #f3f3f3;
+    }
+    .msgItemCon{
+        display: inline-block;
+        padding: 5px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        background-color: #fff;
+        margin: 20px 0 0 20px;
+    }
+</style>
+<body>
+<div class="wrapper">
+    <div class="message">
+
+    </div>
+    <textarea class="send"></textarea>
+</div>
+
+<!--这个文件时怎么引到的？？？  socket.io服务端以http方式提供静态文件-->
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+<script>
+    $(function() {
+        //连接服务端websocket服务 调用global io 不用传websocket服务的url 默认自动连接
+        var socket = io()
+        $(document).keydown(function(event) {
+            console.log('keydown=====')
+            if (event.keyCode == 13 && $('textarea').val()) {
+                socket.emit('chat message client', $('.send').val())
+                $('.send').val('')
+                return false
+            }
+        })
+        socket.on('chat message server', function(msg) {
+            $('.message').append($('<div class="msgItemCon"></div><br/>').text(msg))
+        })
+    })
+</script>
+</body>
+</html>
