@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>yyChat</title>
+    <title>YChat</title>
 </head>
 <style>
     *{
@@ -13,6 +13,25 @@
     body{
         font: 16px Helvetica, Arial;
     }
+    .login{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: 500px;
+        height: 500px;
+        background-color: #000;
+        text-align: center;
+        line-height: 500px;
+    }
+
+    #nickName{
+        font: 24px '微软雅黑';
+        color: white;
+    }
+    ::-moz-placeholder { color: #369; }
+    ::-webkit-input-placeholder { color:#369; }
+    :-ms-input-placeholder { color:#369; }
     .wrapper{
         position: absolute;
         top: 50%;
@@ -48,11 +67,12 @@
     }
 </style>
 <body>
+<div class="login">
+    <input type="text" id="nickName">
+</div>
 <div class="wrapper">
-    <div class="message">
-
-    </div>
-    <textarea class="send"></textarea>
+    <div class="message"></div>
+    <textarea class="send" placeholder="按Enter键发送"></textarea>
 </div>
 
 <!--这个文件时怎么引到的？？？  socket.io服务端以http方式提供静态文件-->
@@ -60,10 +80,14 @@
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
 <script>
     $(function() {
+        $('.login span').show()
+        $(document).keydown(function(event) {
+
+        })
+
         //连接服务端websocket服务 调用global io 不用传websocket服务的url 默认自动连接
         var socket = io()
         $(document).keydown(function(event) {
-            console.log('keydown=====')
             if (event.keyCode == 13 && $('textarea').val()) {
                 socket.emit('chat message client', $('.send').val())
                 $('.send').val('')
